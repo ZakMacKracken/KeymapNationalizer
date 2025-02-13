@@ -22,6 +22,27 @@ class ParsingTest {
         assertNotNull(parseReplacementWrapper("a with ctrl  b"))
     }
 
+    /**
+     * Intellij is special with expecting uppercase key codes for the german mutated vowels (umlauts)
+     * ä and ö in respect to keyboard shortcuts. The lowercase key codes are not detected in keyboard shortcuts.
+     * So we have to switch the lowercase keycodes with the uppercase ones.
+     * @see com.dekonoplyov.switchGermanSpecials
+     */
+    @Test
+    fun parseGermanSpecials(){
+        println("; with ö")
+        val replacementOe = parseReplacementWrapper("; with ö")
+        val (intOe, keyStrokeOe) = replacementOe
+        println("${Integer.toHexString(intOe)} to ${Integer.toHexString(keyStrokeOe.keyCode)}")
+        assertEquals(0x10000d6, keyStrokeOe.keyCode)
+
+        println("' with ä")
+        val replacementAe = parseReplacementWrapper("' with ä")
+        val (intAe, keyStrokeAe) = replacementAe
+        println("${Integer.toHexString(intAe)} to ${Integer.toHexString(keyStrokeAe.keyCode)}")
+        assertEquals(0x10000c4, keyStrokeAe.keyCode)
+    }
+
     @Test
     fun parseFail() {
         assertFailsWith<RuntimeException> { parseReplacementWrapper("") }

@@ -32,7 +32,7 @@ fun parseKeyStroke(to: String): KeyStroke {
     if (modsKeyCode.isEmpty() || modsKeyCode.last().length != 1) {
         throw RuntimeException("Failed to parse: \"$to\"")
     }
-    val keyCode = getExtendedKeyCodeForChar(modsKeyCode.last()[0].code)
+    var keyCode: Int = getExtendedKeyCodeForChar(modsKeyCode.last()[0].code)
     if (keyCode == KeyEvent.VK_UNDEFINED) {
         throw RuntimeException("Failed to parse key: \"${modsKeyCode.last()}\"")
     }
@@ -57,7 +57,25 @@ fun parseKeyStroke(to: String): KeyStroke {
     }
 
     if (tokens.isEmpty()) {
+        keyCode = switchGermanSpecials(keyCode)
         return KeyStroke.getKeyStroke(keyCode, mods)
     }
     throw RuntimeException("Failed to parse: \"${tokens.joinToString(" ")}\"")
+}
+
+/**
+ * Intellij is special with expecting uppercase key codes for the german mutated vowels (umlauts)
+ * ä and ö in respect to keyboard shortcuts. The lowercase key codes are not detected in keyboard shortcuts.
+ * So we have to switch the lowercase keycodes with the uppercase ones.
+ */
+private fun switchGermanSpecials(keyCode: Int): Int {
+    var switchedKeyCode = keyCode
+//    This is for switching ä to Ä (uppercase)
+    if (switchedKeyCode == 0x010000E4) {
+        switchedKeyCode = 0x010000C4
+//    This is for switching ö to Ö (uppercase)
+    } else if (switchedKeyCode == 0x010000F6) {
+        switchedKeyCode = 0x010000D6
+    }
+    return switchedKeyCode
 }

@@ -18,7 +18,22 @@ class KeyCodesTest {
         val unicodeOWithDots = 0x010000f6
         assertNotEquals(KeyEvent.getExtendedKeyCodeForChar(toInt("ö")), unicodeOWithDots)
         assertEquals(KeyEvent.getExtendedKeyCodeForChar(toInt("ö")),
-                KeyEvent.getExtendedKeyCodeForChar(toInt("Ö")))
+            KeyEvent.getExtendedKeyCodeForChar(toInt("Ö")))
+    }
+
+    @Test
+    fun printCodePoints(){
+        printKeyCode('ö')
+        printKeyCode('ü')
+        printKeyCode('ä')
+    }
+
+    private fun printKeyCode(c : Char) {
+        println("#### Character $c ####")
+        println("Codepoint for $c (java.awt): " + Integer.toHexString(KeyEvent.getExtendedKeyCodeForChar(c.code)))
+        println("Codepoint for $c (konoplev): " + Integer.toHexString(getKeyCode(c.toString())))
+        println("Codepoint for ${c.uppercase()} (java.awt): " + Integer.toHexString(KeyEvent.getExtendedKeyCodeForChar(c.uppercaseChar().code)))
+        println("Codepoint for ${c.uppercase()} (konoplev): " + Integer.toHexString(getKeyCode(c.uppercaseChar().toString())))
     }
 
     @Test
