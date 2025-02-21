@@ -5,14 +5,14 @@ plugins {
 }
 
 group = "com.dekonoplyov"
-version = "0.3.0"
+version = "0.3.0-germanKeyboardFix"
 
 repositories {
     mavenCentral()
 }
 
 intellij {
-    version.set("2024.1.4")
+    version.set("2024.3.3")
     type.set("IC") // Target IDE Platform
     plugins.set(listOf())
 }
@@ -28,7 +28,7 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("241")
+        sinceBuild.set("243")
     }
 
     publishPlugin {
